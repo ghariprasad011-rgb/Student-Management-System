@@ -1,0 +1,744 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: auto;
+        }
+
+        header {
+            background: #1e40af;
+            color: white;
+            padding: 28px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid #93c5fd;
+            border-color: #2563eb;
+        }
+
+        button {
+            padding: 11px 17px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .primary-btn {
+            background: #2563eb;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .primary-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .edit-btn {
+            background: #f59e0b;
+            color: #111827;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+            margin-left: 6px;
+        }
+
+        .cancel-btn {
+            background: #64748b;
+            color: white;
+            margin-top: 20px;
+            margin-left: 8px;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #15803d;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        .dashboard-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #eff6ff;
+            padding: 18px;
+            border-radius: 9px;
+            flex: 1;
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .stat-card p {
+            font-size: 25px;
+            font-weight: bold;
+            color: #1e40af;
+        }
+
+        .search-box {
+            max-width: 400px;
+            margin-bottom: 18px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #eff6ff;
+            color: #1e40af;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+        }
+
+        @media (max-width: 650px) {
+            body {
+                padding: 12px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-info {
+                flex-direction: column;
+            }
+
+            .card {
+                padding: 17px;
+            }
+
+            header {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <header>
+        <h1>Student Management System</h1>
+        <p>Register and manage student information</p>
+    </header>
+
+
+    <!-- Registration Form -->
+    <section class="card">
+
+        <h2 id="formTitle">Register Student</h2>
+
+        <form id="studentForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="name">Student Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Enter student name"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter email address"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department</label>
+
+                    <select id="department" required>
+                        <option value="">Select Department</option>
+                        <option value="CSE">Computer Science</option>
+                        <option value="IT">Information Technology</option>
+                        <option value="ECE">Electronics</option>
+                        <option value="EEE">Electrical</option>
+                        <option value="MECH">Mechanical</option>
+                        <option value="CIVIL">Civil</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="year">Academic Year</label>
+
+                    <select id="year" required>
+                        <option value="">Select Year</option>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <button
+                type="submit"
+                class="primary-btn"
+                id="submitButton">
+                Register Student
+            </button>
+
+            <button
+                type="button"
+                class="cancel-btn"
+                id="cancelButton"
+                hidden>
+                Cancel Edit
+            </button>
+
+        </form>
+
+        <p id="message" class="message"></p>
+
+    </section>
+
+
+    <!-- Dashboard Statistics -->
+    <section class="dashboard-info">
+
+        <div class="stat-card">
+            <h3>Total Registered Students</h3>
+            <p id="studentCount">0</p>
+        </div>
+
+    </section>
+
+
+    <!-- Student Records -->
+    <section class="card">
+
+        <h2>Registered Students</h2>
+
+        <div class="search-box">
+            <input
+                type="search"
+                id="searchInput"
+                placeholder="Search by ID, name or department...">
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Year</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="studentTableBody">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+    // DOM elements
+    const studentForm = document.getElementById("studentForm");
+
+    const message = document.getElementById("message");
+
+    const tableBody = document.getElementById("studentTableBody");
+
+    const studentCount = document.getElementById("studentCount");
+
+    const submitButton = document.getElementById("submitButton");
+
+    const cancelButton = document.getElementById("cancelButton");
+
+    const searchInput = document.getElementById("searchInput");
+
+    let editingStudentId = null;
+
+    let allStudents = [];
+
+
+    // Display messages
+    function showMessage(text, type) {
+
+        message.textContent = text;
+
+        message.className = "message " + type;
+
+    }
+
+
+    // CREATE: Register or UPDATE: Edit student
+    studentForm.addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const student = {
+
+            name: document.getElementById("name").value.trim(),
+
+            email: document.getElementById("email").value.trim(),
+
+            department: document.getElementById("department").value,
+
+            year: Number(document.getElementById("year").value)
+
+        };
+
+        if (
+            !student.name ||
+            !student.email ||
+            !student.department ||
+            !student.year
+        ) {
+            showMessage("Please fill in all fields.", "error");
+            return;
+        }
+
+        const isEditing = editingStudentId !== null;
+
+        const url = isEditing
+            ? `/api/students/${editingStudentId}`
+            : "/api/students";
+
+        const method = isEditing ? "PUT" : "POST";
+
+        submitButton.disabled = true;
+
+        try {
+
+            const response = await fetch(url, {
+
+                method: method,
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(student)
+
+            });
+
+            if (!response.ok) {
+                throw new Error("Unable to save student.");
+            }
+
+            const result = await response.json();
+
+            if (isEditing) {
+
+                showMessage(
+                    "Student updated successfully!",
+                    "success"
+                );
+
+            } else {
+
+                showMessage(
+                    "Student registered successfully! Your ID is: " + result.id,
+                    "success"
+                );
+
+            }
+
+            resetForm();
+
+            await loadStudents();
+
+        } catch (error) {
+
+            showMessage(error.message, "error");
+
+            console.error(error);
+
+        } finally {
+
+            submitButton.disabled = false;
+
+        }
+
+    });
+
+
+    // READ: Get all students from Spring Boot
+    async function loadStudents() {
+
+        try {
+
+            const response = await fetch("/api/students");
+
+            if (!response.ok) {
+                throw new Error("Unable to fetch student records.");
+            }
+
+            allStudents = await response.json();
+
+            studentCount.textContent = allStudents.length;
+
+            displayStudents(allStudents);
+
+        } catch (error) {
+
+            console.error(error);
+
+            showMessage(error.message, "error");
+
+        }
+
+    }
+
+
+    // Display student records in table
+    function displayStudents(students) {
+
+        tableBody.replaceChildren();
+
+        if (students.length === 0) {
+
+            const row = document.createElement("tr");
+
+            const cell = document.createElement("td");
+
+            cell.colSpan = 6;
+
+            cell.className = "empty-message";
+
+            cell.textContent = "No students found.";
+
+            row.appendChild(cell);
+
+            tableBody.appendChild(row);
+
+            return;
+
+        }
+
+        students.forEach(student => {
+
+            const row = document.createElement("tr");
+
+            const values = [
+                student.id,
+                student.name,
+                student.email,
+                student.department,
+                student.year
+            ];
+
+            values.forEach(value => {
+
+                const cell = document.createElement("td");
+
+                cell.textContent = value ?? "";
+
+                row.appendChild(cell);
+
+            });
+
+
+            // Actions cell
+            const actionCell = document.createElement("td");
+
+
+            // Edit button
+            const editButton = document.createElement("button");
+
+            editButton.textContent = "Edit";
+
+            editButton.className = "edit-btn";
+
+            editButton.addEventListener("click", function() {
+
+                editStudent(student);
+
+            });
+
+            actionCell.appendChild(editButton);
+
+
+            // Delete button
+            const deleteButton = document.createElement("button");
+
+            deleteButton.textContent = "Delete";
+
+            deleteButton.className = "delete-btn";
+
+            deleteButton.addEventListener("click", function() {
+
+                deleteStudent(student.id);
+
+            });
+
+            actionCell.appendChild(deleteButton);
+
+            row.appendChild(actionCell);
+
+            tableBody.appendChild(row);
+
+        });
+
+    }
+
+
+    // UPDATE: Fill form with existing student details
+    function editStudent(student) {
+
+        editingStudentId = student.id;
+
+        document.getElementById("name").value = student.name;
+
+        document.getElementById("email").value = student.email;
+
+        document.getElementById("department").value =
+            student.department;
+
+        document.getElementById("year").value = student.year;
+
+        document.getElementById("formTitle").textContent =
+            "Edit Student";
+
+        submitButton.textContent = "Update Student";
+
+        cancelButton.hidden = false;
+
+        showMessage(
+            "Editing student ID: " + student.id,
+            "success"
+        );
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+
+    // Cancel editing
+    function resetForm() {
+
+        studentForm.reset();
+
+        editingStudentId = null;
+
+        document.getElementById("formTitle").textContent =
+            "Register Student";
+
+        submitButton.textContent = "Register Student";
+
+        cancelButton.hidden = true;
+
+    }
+
+
+    cancelButton.addEventListener("click", function() {
+
+        resetForm();
+
+        showMessage("", "");
+
+    });
+
+
+    // DELETE: Remove student
+    async function deleteStudent(id) {
+
+        const confirmDelete = confirm(
+            "Are you sure you want to delete student ID: " + id + "?"
+        );
+
+        if (!confirmDelete) {
+            return;
+        }
+
+        try {
+
+            const response = await fetch(`/api/students/${id}`, {
+
+                method: "DELETE"
+
+            });
+
+            if (!response.ok) {
+                throw new Error("Unable to delete student.");
+            }
+
+            if (editingStudentId === id) {
+
+                resetForm();
+
+            }
+
+            showMessage(
+                "Student deleted successfully!",
+                "success"
+            );
+
+            await loadStudents();
+
+        } catch (error) {
+
+            showMessage(error.message, "error");
+
+            console.error(error);
+
+        }
+
+    }
+
+
+    // SEARCH: Search by ID, name or department
+    searchInput.addEventListener("input", function() {
+
+        const searchValue = searchInput.value
+            .trim()
+            .toLowerCase();
+
+        const filteredStudents = allStudents.filter(student => {
+
+            return (
+                String(student.id).includes(searchValue) ||
+                student.name.toLowerCase().includes(searchValue) ||
+                student.department.toLowerCase().includes(searchValue)
+            );
+
+        });
+
+        displayStudents(filteredStudents);
+
+    });
+
+
+    // Load students when page opens
+    document.addEventListener("DOMContentLoaded", function() {
+
+        loadStudents();
+
+    });
+
+</script>
+
+</body>
+</html>
